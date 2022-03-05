@@ -16,7 +16,8 @@ tasks:
   - init: >
       bundle install &&
       yarn install &&
-      rake db:setup
+      rake db:setup &&
+      rake db:migrate
     command: yarn start
 
 vscode:
