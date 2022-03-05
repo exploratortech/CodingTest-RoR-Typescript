@@ -1,0 +1,21 @@
+name: Deploy develop branch to Staging site
+
+# Uncomment the following to enable this workflow
+# on:
+#   push:
+#     branches:
+#       - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Deploy the application
+        uses: landmaj/github-action-dokku@master
+        with:
+          PRIVATE_KEY: ${{ secrets.WORKFLOW_PRI_KEY }}
+          PUBLIC_KEY: ${{ secrets.WORKFLOW_PUB_KEY }}
+          HOST: dokku.explorator.ca
+          PROJECT: template
+          BRANCH: develop

@@ -1,0 +1,2 @@
+webpack: ./bin/webpack-dev-server
+web: rails server -b 0.0.0.0 -p 3000
