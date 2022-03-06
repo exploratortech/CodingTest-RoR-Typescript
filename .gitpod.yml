@@ -16,7 +16,7 @@ tasks:
   - init: >
       bundle install &&
       yarn install &&
-      rake db:setup &&
+      rake db:create &&
       rake db:migrate
     command: yarn start
 
