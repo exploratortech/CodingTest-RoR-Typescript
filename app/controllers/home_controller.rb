@@ -9,19 +9,22 @@ class HomeController < ApplicationController
 
   def edit_todo_item
     @todo_item.update(todo_item_params)
+    render json: @todo_item
   end
 
   def reset_todo_items
     Todo.update_all(checked: false)
+    @todos = Todo.all.order(:id)
+    render json: @todos
   end
 
   private
 
   def todo_item_params
-    params.permit(:id, :title, :checked)
+    params.require(:home).permit(:id, :title, :checked)
   end
 
   def set_todo_item
-    @todo_item = Todo.find(todo_item_params[:id])
+    @todo_item = Todo.find(params[:id])
   end
 end
