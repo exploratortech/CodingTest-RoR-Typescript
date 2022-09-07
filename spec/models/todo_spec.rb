@@ -10,8 +10,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
-class Todo < ApplicationRecord
-  has_one_attached :file
-
-  validates :title, presence: true
+RSpec.describe(::Todo, type: :model) do
+  it { is_expected.to(have_one_attached(:file)) }
+  it { is_expected.to(validate_presence_of(:title)) }
 end

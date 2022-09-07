@@ -17,9 +17,11 @@ gem "bootsnap", ">= 1.4.4", require: false
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
   gem "foreman"
+  gem 'rubocop-rails', '~> 2.11', require: false
 end
 
 group :development do
+  gem 'annotate', '~> 3.2'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem "web-console", ">= 4.1.0"
   gem "listen", "~> 3.3"
@@ -32,6 +34,10 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", ">= 3.26"
   gem "selenium-webdriver"
+  gem 'factory_bot_rails'
+  gem 'rails-controller-testing'
+  gem 'rspec-rails'
+  gem 'shoulda-matchers', '~> 4.5'
   # Easy installation and use of web drivers to run system tests with browsers
   gem "webdrivers"
 end

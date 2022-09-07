@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, ListGroup, Form } from "react-bootstrap";
-import { ResetButton } from "./uiComponent";
 import axios from "axios";
+
+import { ResetButton, FileInput, ListGroupItem } from "./styles";
+import { reset, selectTodo, uploadAttachment } from "./api/api";
 
 type TodoItem = {
   id: number;
@@ -14,6 +16,8 @@ type Props = {
 };
 
 const TodoList: React.FC<Props> = ({ todoItems }) => {
+  const [todoList, setTodoList] = useState<TodoItem[]>(todoItems);
+
   useEffect(() => {
     const token = document.querySelector(
       "[name=csrf-token]"
@@ -21,33 +25,64 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
     axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
   }, []);
 
-  const checkBoxOnCheck = (
+  const checkBoxOnCheck = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    todoItemId: number
+  ): Promise<void> => {
+    try {
+      const data = await selectTodo(todoItemId, e.target.checked);
+      const todoItemIndex = todoList.findIndex(
+        (todo) => todo.id === todoItemId
+      );
+      const updatedTodoList = [...todoList];
+      updatedTodoList[todoItemIndex].checked =
+        !updatedTodoList[todoItemIndex].checked;
+      setTodoList([...updatedTodoList]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const uploadFile = (
     e: React.ChangeEvent<HTMLInputElement>,
     todoItemId: number
   ): void => {
-    axios.post("/todo", {
-      id: todoItemId,
-      checked: e.target.checked,
-    });
+    const file = e.target.files[0];
+    const formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("fileName", file.name);
+
+    uploadAttachment(todoItemId, formData);
   };
 
-  const resetButtonOnClick = (): void => {
-    axios.post("/reset").then(() => location.reload());
+  const resetButtonOnClick = async (): Promise<void> => {
+    const data = await reset();
+    const updatedTodoList = todoList.map((todo) => ({
+      ...todo,
+      checked: false,
+    }));
+    setTodoList([...updatedTodoList]);
   };
 
   return (
     <Container>
       <h3>2022 Wish List</h3>
       <ListGroup>
-        {todoItems.map((todo) => (
-          <ListGroup.Item key={todo.id}>
+        {todoList.map((todo) => (
+          <ListGroupItem key={todo.id}>
             <Form.Check
               type="checkbox"
               label={todo.title}
               checked={todo.checked}
               onChange={(e) => checkBoxOnCheck(e, todo.id)}
             />
-          </ListGroup.Item>
+            <FileInput
+              type="file"
+              size="sm"
+              onChange={(e) => uploadFile(e, todo.id)}
+            />
+          </ListGroupItem>
         ))}
         <ResetButton onClick={resetButtonOnClick}>Reset</ResetButton>
       </ListGroup>

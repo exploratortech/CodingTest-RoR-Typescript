@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  root to: "home#landing"
-  post "todo", to: "home#edit_todo_item"
-  post "reset", to: "home#reset_todo_item"
+  root to: "todos#index"
+
+  resources :todos, only: [:index, :update] do
+    post "reset", to: "todos#reset", on: :collection
+  end
 end
