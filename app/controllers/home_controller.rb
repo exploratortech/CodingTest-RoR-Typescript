@@ -4,11 +4,13 @@ class HomeController < ApplicationController
   before_action :set_todo_item, only: [:edit_todo_item]
 
   def landing
-    @todos = Todo.all.order(:id)
+    @todos = Todo.all.order(:id).map { |record| TodoSerializer.new(record) }
   end
 
   def edit_todo_item
-    @todo_item.update(todo_item_params)
+    @todo_item.image.attach(todo_item_params[:image]) if todo_item_params[:image]
+    @todo_item.update(todo_item_params.except(:image))
+
     render json: @todo_item
   end
 
@@ -19,7 +21,7 @@ class HomeController < ApplicationController
   private
 
   def todo_item_params
-    params.require(:home).permit(:id, :title, :checked)
+    params.require(:home).permit(:id, :title, :checked, :image)
   end
 
   def set_todo_item
