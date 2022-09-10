@@ -46,17 +46,6 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
     axios.post("/reset").then(() => location.reload());
   };
 
-  // const getProgressBar = () => {
-  //   const progressItem = [];
-  //   todoItemsState.map(item => {
-  //     if(item.checked){
-  //       progressItem.push(item)
-  //     }
-  //   })
-    
-  //   return ((progressItem.length/todoItemsState.length)*100).toString();
-  // }
-
   useEffect(() => {
     const progressItem = [];
     todoItemsState.map(item => {
