@@ -7,7 +7,7 @@ class HomeController < ApplicationController
     @todos = Todo.all.order(:id)
   end
 
-  def edit_todo_item
+  def edit_edit_todo_itemtodo_item
     @todo_item.update(todo_item_params)
   end
 

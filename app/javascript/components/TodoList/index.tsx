@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, ListGroup, Form } from "react-bootstrap";
+import { Container, ListGroup, Form, ProgressBar } from "react-bootstrap";
 import { ResetButton } from "./uiComponent";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ type TodoItem = {
   id: number;
   title: string;
   checked: boolean;
+  created_at: Date;
 };
 
 type Props = {
@@ -15,6 +16,7 @@ type Props = {
 
 const TodoList: React.FC<Props> = ({ todoItems }) => {
   const [todoItemsState, setTodoItemsState] = useState(todoItems)
+  const [progressBar, setProgressBar] = useState(0);
   useEffect(() => {
     const token = document.querySelector(
       "[name=csrf-token]"
@@ -44,6 +46,27 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
     axios.post("/reset").then(() => location.reload());
   };
 
+  // const getProgressBar = () => {
+  //   const progressItem = [];
+  //   todoItemsState.map(item => {
+  //     if(item.checked){
+  //       progressItem.push(item)
+  //     }
+  //   })
+    
+  //   return ((progressItem.length/todoItemsState.length)*100).toString();
+  // }
+
+  useEffect(() => {
+    const progressItem = [];
+    todoItemsState.map(item => {
+      if(item.checked){
+        progressItem.push(item)
+      }
+    })
+    setProgressBar((progressItem.length/todoItemsState.length)*100)
+  }, [todoItemsState])
+
   return (
     <Container>
       <h3>2022 Wish List</h3>
@@ -58,6 +81,8 @@ const TodoList: React.FC<Props> = ({ todoItems }) => {
             />
           </ListGroup.Item>
         ))}
+        <br />
+        <ProgressBar variant="success" now={progressBar}/>
         <ResetButton onClick={resetButtonOnClick}>Reset</ResetButton>
       </ListGroup>
     </Container>
