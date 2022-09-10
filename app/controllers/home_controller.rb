@@ -11,7 +11,7 @@ class HomeController < ApplicationController
     @todo_item.update(todo_item_params)
   end
 
-  def reset_todo_items
+  def reset_todo_item
     Todo.update_all(checked: false)
   end
 
